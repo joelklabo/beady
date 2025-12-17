@@ -114,6 +114,7 @@ jobs:
       VSCODE_TEST_CHANNEL: stable
       VSCODE_TEST_INSTANCE_ID: ${{ github.run_id }}-${{ github.run_attempt }}-coverage
       BEADS_NO_DAEMON: "1"
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     steps:
       - uses: actions/checkout@v4
 
@@ -137,10 +138,10 @@ jobs:
           retention-days: 7
 
       - name: Upload to Codecov
-        if: ${{ secrets.CODECOV_TOKEN }}
+        if: ${{ env.CODECOV_TOKEN != '' }}
         uses: codecov/codecov-action@v4
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+          token: ${{ env.CODECOV_TOKEN }}
           files: coverage/lcov.info
           flags: unit
           fail_ci_if_error: true
