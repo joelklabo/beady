@@ -106,7 +106,7 @@ export async function measureActivation(
   try {
     const start = now();
     await runTestsImpl({
-      version: env.channel === "insiders" ? "insider" : "stable",
+      version: env.channel === "insiders" ? "insiders" : "stable",
       extensionDevelopmentPath: path.resolve(__dirname, "../.."),
       extensionTestsPath: testDir,
       launchArgs: [

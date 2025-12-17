@@ -1,4 +1,3 @@
-import { Octokit } from '@octokit/rest';
 import { promises as fs } from 'fs';
 import * as path from 'path';
 import {
@@ -196,6 +195,48 @@ export interface CreateFeedbackIssueOptions {
   environmentResolver?: () => Promise<EnvironmentInfo>;
 }
 
+async function createIssueViaGitHubApi(options: {
+  owner: string;
+  repo: string;
+  authToken: string;
+  title: string;
+  body: string;
+  labels?: string[];
+}): Promise<any> {
+  const response = await fetch(`https://api.github.com/repos/${options.owner}/${options.repo}/issues`, {
+    method: 'POST',
+    headers: {
+      accept: 'application/vnd.github+json',
+      authorization: `Bearer ${options.authToken}`,
+      'content-type': 'application/json',
+      'user-agent': 'beady-feedback',
+      'x-github-api-version': '2022-11-28',
+    },
+    body: JSON.stringify({
+      title: options.title,
+      body: options.body,
+      labels: options.labels && options.labels.length > 0 ? options.labels : undefined,
+    }),
+  });
+
+  const raw = await response.text();
+  let data: any = undefined;
+  try {
+    data = raw ? JSON.parse(raw) : undefined;
+  } catch {
+    data = undefined;
+  }
+
+  if (!response.ok) {
+    const message = data?.message ?? raw ?? response.statusText ?? 'Unknown error';
+    const error = new Error(message);
+    (error as any).status = response.status;
+    throw error;
+  }
+
+  return data;
+}
+
 function normalizeLabel(value: string | undefined): string | undefined {
   const trimmed = value?.trim();
   return trimmed && trimmed.length > 0 ? trimmed : undefined;
@@ -311,23 +352,25 @@ export async function createFeedbackIssue(
   const [firstLine] = (input.summary ?? 'Feedback').split(/\r?\n/, 1);
   const title = (firstLine?.trim() ?? 'Feedback') || 'Feedback';
 
-  const octokit: OctokitLike =
-    options.octokit ??
-    new Octokit({
-      auth: authToken,
-      userAgent: 'beady-feedback'
-    });
+  const octokit = options.octokit;
 
   try {
-    const response = await octokit.issues.create({
-      owner: config.owner!,
-      repo: config.repo!,
-      title,
-      body,
-      labels: labels.length > 0 ? labels : undefined
-    });
-
-    const data = response?.data ?? {};
+    const data = octokit
+      ? (await octokit.issues.create({
+          owner: config.owner!,
+          repo: config.repo!,
+          title,
+          body,
+          labels: labels.length > 0 ? labels : undefined,
+        }))?.data ?? {}
+      : await createIssueViaGitHubApi({
+          owner: config.owner!,
+          repo: config.repo!,
+          authToken,
+          title,
+          body,
+          labels,
+        });
     const result: FeedbackIssueResult = {};
     const id = data.id?.toString?.() ?? data.node_id;
     if (id) {

@@ -19,7 +19,7 @@ async function main(): Promise<void> {
     const extensionTestsPath = path.resolve(__dirname, './suite/index');
 
     await runTests({
-      version: testEnv.channel === 'insiders' ? 'insider' : 'stable',
+      version: testEnv.channel === 'insiders' ? 'insiders' : 'stable',
       extensionDevelopmentPath,
       extensionTestsPath,
       extensionTestsEnv: {
