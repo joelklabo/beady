@@ -14,7 +14,8 @@ describe('webview CSP regression', () => {
       vscodeCacheKeys = Object.keys(require.cache).filter(key => key.includes('vscode'));
       vscodeCacheKeys.forEach(key => delete require.cache[key]);
       Object.keys(require.cache).forEach((key) => {
-        if (key.includes('providers/beads/webview')) {
+        const normalized = key.replace(/\\/g, '/');
+        if (normalized.includes('providers/beads/webview')) {
           delete require.cache[key];
         }
       });
@@ -108,7 +109,8 @@ describe('webview CSP regression', () => {
       vscodeCacheKeys = Object.keys(require.cache).filter(key => key.includes('vscode'));
       vscodeCacheKeys.forEach(key => delete require.cache[key]);
       Object.keys(require.cache).forEach((key) => {
-        if (key.includes('graph/view')) {
+        const normalized = key.replace(/\\/g, '/');
+        if (normalized.includes('graph/view')) {
           delete require.cache[key];
         }
       });
