@@ -36,13 +36,26 @@ export function resetBeadyRequireCache(): void {
   const packagesOutFragment = `${path.sep}out${path.sep}`;
   const packagesOutTestFragment = `${path.sep}out${path.sep}test${path.sep}`;
 
+  const normalizeKey = (value: string) => value.replace(/\\/g, '/').toLowerCase();
+  const outDirKey = normalizeKey(outDir);
+  const outTestDirKey = normalizeKey(outTestDir);
+  const packagesDirKey = normalizeKey(packagesDir);
+  const packagesOutFragmentKey = normalizeKey(packagesOutFragment);
+  const packagesOutTestFragmentKey = normalizeKey(packagesOutTestFragment);
+
   for (const key of Object.keys(require.cache)) {
-    if (key.startsWith(outDir) && !key.startsWith(outTestDir)) {
+    const normalized = normalizeKey(key);
+
+    if (normalized.startsWith(outDirKey) && !normalized.startsWith(outTestDirKey)) {
       delete require.cache[key];
       continue;
     }
 
-    if (key.startsWith(packagesDir) && key.includes(packagesOutFragment) && !key.includes(packagesOutTestFragment)) {
+    if (
+      normalized.startsWith(packagesDirKey) &&
+      normalized.includes(packagesOutFragmentKey) &&
+      !normalized.includes(packagesOutTestFragmentKey)
+    ) {
       delete require.cache[key];
     }
   }
