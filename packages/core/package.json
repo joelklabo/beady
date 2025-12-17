@@ -6,7 +6,7 @@
   "types": "out/index.d.ts",
   "scripts": {
     "build": "tsc -b",
-    "test": "tsx --test \"test/**/*.test.ts\""
+    "test": "node scripts/run-tests.js"
   },
   "devDependencies": {
     "tsx": "^4.7.0"
