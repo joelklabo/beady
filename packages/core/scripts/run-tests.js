@@ -39,11 +39,30 @@ if (testFiles.length === 0) {
   process.exit(1);
 }
 
-const tsxCommand = process.platform === 'win32' ? 'tsx.cmd' : 'tsx';
-const result = spawnSync(tsxCommand, ['--test', ...testFiles], {
+let tsxCliPath;
+try {
+  // Run tsx via Node to avoid shell/binary resolution differences across platforms.
+  const tsxPackageJsonPath = require.resolve('tsx/package.json', { paths: [packageRoot] });
+  const tsxPackageJson = JSON.parse(fs.readFileSync(tsxPackageJsonPath, 'utf8'));
+  const bin = tsxPackageJson.bin;
+  const binPath = typeof bin === 'string' ? bin : bin && (bin.tsx || bin['tsx']);
+  if (!binPath || typeof binPath !== 'string') {
+    throw new Error(`Unexpected tsx bin field in ${tsxPackageJsonPath}`);
+  }
+  tsxCliPath = path.resolve(path.dirname(tsxPackageJsonPath), binPath);
+} catch (error) {
+  console.error('Failed to resolve tsx CLI path:', error);
+  process.exit(1);
+}
+
+const result = spawnSync(process.execPath, [tsxCliPath, '--test', ...testFiles], {
   cwd: packageRoot,
   env: process.env,
   stdio: 'inherit',
 });
+
+if (result.error) {
+  console.error('Failed to run tests:', result.error);
+}
 
 process.exit(result.status ?? 1);
