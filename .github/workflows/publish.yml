@@ -31,7 +31,8 @@ jobs:
         run: npm ci
 
       - name: Validate tag matches package.json version
-        run: node -e "const tag=process.env.GITHUB_REF_NAME||''; const version=require('./package.json').version; const expected=`v${version}`; if(tag!==expected){console.error(`Refusing to publish: tag ${tag} does not match package.json version ${version} (expected ${expected}).`); process.exit(1)}"
+        run: |
+          node -e "const tag=process.env.GITHUB_REF_NAME||''; const version=require('./package.json').version; const expected=\`v\${version}\`; if(tag!==expected){console.error(\`Refusing to publish: tag \${tag} does not match package.json version \${version} (expected \${expected}).\`); process.exit(1)}"
 
       - name: Release gates (tests + audits + package checks)
         run: npm run ci:verify
@@ -44,6 +45,10 @@ jobs:
           SKIP_VSCODE_PREPUBLISH: "1"
         run: |
           set -euo pipefail
+          if [[ -z "${VSCE_PAT:-}" ]]; then
+            echo "Missing required secret VSCE_PAT."
+            exit 1
+          fi
           if [[ "${GITHUB_REF_NAME}" == *-* ]]; then
             npm run publish -- --pre-release
           else
