@@ -3,7 +3,7 @@
 [![VS Code Marketplace Version](https://img.shields.io/visual-studio-marketplace/v/klabo.beady?style=flat-square&label=VS%20Code%20Marketplace&logo=visual-studio-code)](https://marketplace.visualstudio.com/items?itemName=klabo.beady)
 [![VS Code Installs](https://img.shields.io/visual-studio-marketplace/i/klabo.beady?style=flat-square&label=Installs&logo=visual-studio-code)](https://marketplace.visualstudio.com/items?itemName=klabo.beady)
 [![VS Code Rating](https://img.shields.io/visual-studio-marketplace/r/klabo.beady?style=flat-square&label=Rating&logo=visual-studio-code)](https://marketplace.visualstudio.com/items?itemName=klabo.beady)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](https://github.com/joelklabo/beady/blob/main/LICENSE)
 [![Build Status](https://img.shields.io/github/actions/workflow/status/joelklabo/beady/test.yml?branch=main&style=flat-square&logo=github)](https://github.com/joelklabo/beady/actions/workflows/test.yml)
 
 > Worktree-friendly issue tracker for VS Code — browse issues, dependencies, and activity from your [Beads](https://github.com/steveyegge/beads) database.
@@ -22,7 +22,7 @@
 
 ## Screenshot
 
-![Beady issues view showing tasks with status badges and dependency indicators](media/screenshot.png)
+![Beady issues view showing tasks with status badges and dependency indicators](https://raw.githubusercontent.com/joelklabo/beady/main/media/screenshot.png)
 
 ## Features
 
@@ -213,7 +213,7 @@ See [CONTRIBUTING.md](https://github.com/joelklabo/beady/blob/main/CONTRIBUTING.
 
 ## License
 
-[MIT](LICENSE) © Beady Contributors
+[MIT](https://github.com/joelklabo/beady/blob/main/LICENSE) © Beady Contributors
 
 ---
 
