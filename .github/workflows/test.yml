@@ -137,8 +137,10 @@ jobs:
           retention-days: 7
 
       - name: Upload to Codecov
+        if: ${{ secrets.CODECOV_TOKEN != '' }}
         uses: codecov/codecov-action@v4
         with:
+          token: ${{ secrets.CODECOV_TOKEN }}
           files: coverage/lcov.info
           flags: unit
           fail_ci_if_error: true
