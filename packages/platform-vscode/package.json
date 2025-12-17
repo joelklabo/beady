@@ -1,0 +1,10 @@
+{
+  "name": "@beads/platform-vscode",
+  "version": "0.1.0",
+  "private": true,
+  "main": "../../dist/extension.js",
+  "types": "../../dist/extension.d.ts",
+  "scripts": {
+    "build": "tsc -b && tsc-alias -p ./tsconfig.json"
+  }
+}

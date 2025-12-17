@@ -1,0 +1,761 @@
+{
+  "name": "beady",
+  "displayName": "Beady Project Manager",
+  "description": "Worktree-friendly bd project manager for Beady: browse issues, dependencies, and activity inside VS Code.",
+  "version": "0.1.0",
+  "private": true,
+  "publisher": "klabo",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/joelklabo/beady.git"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "bugs": {
+    "url": "https://github.com/joelklabo/beady/issues"
+  },
+  "homepage": "https://github.com/joelklabo/beady#readme",
+  "icon": "media/icon.png",
+  "galleryBanner": {
+    "color": "#0b1220",
+    "theme": "dark"
+  },
+  "keywords": [
+    "bd",
+    "beady",
+    "beads",
+    "worktree",
+    "dependency-graph",
+    "project-manager",
+    "project-management",
+    "issue-tracker",
+    "task-management"
+  ],
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Productivity",
+    "Visualization"
+  ],
+  "main": "./dist/extension.js",
+  "types": "./dist/extension.d.ts",
+  "contributes": {
+    "commands": [
+      {
+        "command": "beady.toggleDensity",
+        "title": "Beady: Toggle Density",
+        "icon": "$(screen-full)"
+      },
+      {
+        "command": "beady.refresh",
+        "title": "%command.beady.refresh%",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "beady.search",
+        "title": "%command.beady.search%",
+        "icon": "$(search)"
+      },
+      {
+        "command": "beady.clearSearch",
+        "title": "%command.beady.clearSearch%",
+        "icon": "$(clear-all)"
+      },
+      {
+        "command": "beady.openBead",
+        "title": "%command.beady.openBead%"
+      },
+      {
+        "command": "beady.createBead",
+        "title": "%command.beady.createBead%",
+        "icon": "$(add)"
+      },
+      {
+        "command": "beady.addDependency",
+        "title": "%command.beady.addDependency%",
+        "icon": "$(link)"
+      },
+      {
+        "command": "beady.dependencyTree.pickRoot",
+        "title": "%command.beady.dependencyTree.pickRoot%",
+        "icon": "$(location)"
+      },
+      {
+        "command": "beady.dependencyTree.addUpstream",
+        "title": "%command.beady.dependencyTree.addUpstream%",
+        "icon": "$(arrow-up)"
+      },
+      {
+        "command": "beady.dependencyTree.addDownstream",
+        "title": "%command.beady.dependencyTree.addDownstream%",
+        "icon": "$(arrow-down)"
+      },
+      {
+        "command": "beady.dependencyTree.remove",
+        "title": "%command.beady.dependencyTree.remove%",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "beady.editExternalReference",
+        "title": "%command.beady.editExternalReference%"
+      },
+      {
+        "command": "beady.visualizeDependencies",
+        "title": "%command.beady.visualizeDependencies%",
+        "icon": "$(graph)"
+      },
+      {
+        "command": "beady.exportCsv",
+        "title": "%command.beady.exportCsv%",
+        "icon": "$(table)"
+      },
+      {
+        "command": "beady.exportMarkdown",
+        "title": "%command.beady.exportMarkdown%"
+      },
+      {
+        "command": "beady.inlineStatusChange",
+        "title": "%command.beady.inlineStatusChange%",
+        "icon": "$(edit)"
+      },
+      {
+        "command": "beady.clearSortOrder",
+        "title": "%command.beady.clearSortOrder%",
+        "icon": "$(list-ordered)"
+      },
+      {
+        "command": "beady.pickSortMode",
+        "title": "%command.beady.pickSortMode%",
+        "icon": "$(list-filter)"
+      },
+      {
+        "command": "beady.toggleSortMode",
+        "title": "%command.beady.toggleSortMode%",
+        "icon": "$(list-tree)"
+      },
+      {
+        "command": "beady.refreshActivityFeed",
+        "title": "%command.beady.refreshActivityFeed%",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "beady.filterActivityFeed",
+        "title": "%command.beady.filterActivityFeed%",
+        "icon": "$(filter)"
+      },
+      {
+        "command": "beady.clearActivityFeedFilter",
+        "title": "%command.beady.clearActivityFeedFilter%",
+        "icon": "$(clear-all)"
+      },
+      {
+        "command": "beady.activityFeed.openEvent",
+        "title": "%command.beady.activityFeed.openEvent%"
+      },
+      {
+        "command": "beady.activityFeed.openSelected",
+        "title": "%command.beady.activityFeed.openSelected%"
+      },
+      {
+        "command": "beady.openActivityFeedPanel",
+        "title": "%command.beady.openActivityFeedPanel%",
+        "icon": "$(timeline-open)"
+      },
+      {
+        "command": "beady.deleteBeads",
+        "title": "%command.beady.deleteBeads%",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "beady.bulkUpdateStatus",
+        "title": "%command.beady.bulkUpdateStatus%",
+        "icon": "$(checklist)"
+      },
+      {
+        "command": "beady.bulkAddLabel",
+        "title": "%command.beady.bulkAddLabel%",
+        "icon": "$(tag)"
+      },
+      {
+        "command": "beady.bulkRemoveLabel",
+        "title": "%command.beady.bulkRemoveLabel%",
+        "icon": "$(tag)"
+      },
+      {
+        "command": "beady.toggleFavorite",
+        "title": "%command.beady.toggleFavorite%",
+        "icon": "$(star)"
+      },
+      {
+        "command": "beady.applyQuickFilterPreset",
+        "title": "%command.beady.applyQuickFilterPreset%",
+        "icon": "$(filter)"
+      },
+      {
+        "command": "beady.clearQuickFilters",
+        "title": "%command.beady.clearQuickFilters%",
+        "icon": "$(clear-all)"
+      },
+      {
+        "command": "beady.toggleClosedVisibility",
+        "title": "%command.beady.toggleClosedVisibility%",
+        "icon": "$(eye-closed)"
+      },
+      {
+        "command": "beady.openInProgressPanel",
+        "title": "%command.beady.openInProgressPanel%",
+        "icon": "$(pulse)"
+      },
+      {
+        "command": "beady.inlineEditTitle",
+        "title": "%command.beady.inlineEditTitle%",
+        "icon": "$(edit)"
+      },
+      {
+        "command": "beady.inlineEditLabels",
+        "title": "%command.beady.inlineEditLabels%",
+        "icon": "$(tag)"
+      },
+      {
+        "command": "beady.editAssignee",
+        "title": "%command.beady.editAssignee%",
+        "icon": "$(account)"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "beady",
+          "title": "Beady",
+          "icon": "$(symbol-event)"
+        }
+      ]
+    },
+    "views": {
+      "beady": [
+        {
+          "type": "webview",
+          "id": "beady.issuesView",
+          "name": "Tasks",
+          "icon": "$(checklist)"
+        },
+        {
+          "id": "activityFeed",
+          "name": "Activity Feed",
+          "icon": "$(history)"
+        },
+        {
+          "id": "beadyDependencyTree",
+          "name": "%view.dependencyTree.name%",
+          "when": "config.beady.enableDependencyEditing",
+          "icon": "$(git-branch)"
+        }
+      ]
+    },
+    "chatParticipants": [
+      {
+        "id": "beady.task-creator",
+        "name": "task-creator",
+        "description": "Turn a feature request into a complete bd epic + task tree",
+        "icon": "$(sparkle)",
+        "isSticky": true
+      },
+      {
+        "id": "beady.task-worker",
+        "name": "task-worker",
+        "description": "Continuously work through ALL bd issues until none remain",
+        "icon": "$(tools)",
+        "isSticky": true
+      }
+    ],
+    "configuration": {
+      "type": "object",
+      "title": "Beady",
+      "properties": {
+        "beady.commandPath": {
+          "type": "string",
+          "default": "bd",
+          "description": "Path to the bd CLI executable (defaults to 'bd' which should be in your PATH)"
+        },
+        "beady.projectRoot": {
+          "type": "string",
+          "default": "",
+          "description": "Override project root for beads commands"
+        },
+        "beady.dataFile": {
+          "type": "string",
+          "default": ".beads/issues.jsonl",
+          "description": "Path to the beads data JSONL file (relative to the project root or absolute)"
+        },
+        "beady.staleThresholdMinutes": {
+          "type": "number",
+          "default": 10,
+          "minimum": 1,
+          "description": "Number of minutes after which an in-progress task is highlighted as stale. Tasks in progress longer than this threshold will be visually flagged to help identify potentially stuck work."
+        },
+        "beady.enableWorktreeGuard": {
+          "type": "boolean",
+          "default": true,
+          "description": "Run worktree guard before mutating bd commands to prevent duplicate/unsafe worktrees"
+        },
+        "beady.autoApplyWorktreeLabel": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show current worktree label in Beads views and tooltips"
+        },
+        "beady.exportMarkdown.enabled": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "Enable the experimental Markdown export command for the Beads explorer. When disabled, the command and toolbar entry are hidden."
+        },
+        "beady.inlineStatusChange.enabled": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "Enable the inline status change command for Beads items. When disabled, related commands and menus are hidden."
+        },
+        "beady.exportCsv.enabled": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "Enable the experimental CSV export command for the Beads explorer. When disabled, the command and toolbar entry are hidden."
+        },
+        "beady.exportCsv.delimiter": {
+          "type": "string",
+          "default": ",",
+          "markdownDescription": "Delimiter to use for CSV export. Accepts a single character, 'tab', or '\\\\t'."
+        },
+        "beady.exportCsv.includeBom": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "Prefix CSV exports with a UTF-8 BOM (useful for Excel or apps that need BOM)."
+        },
+        "beady.feedback.enabled": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "Enable the experimental feedback flow. When disabled, feedback commands and UI are hidden."
+        },
+        "beady.feedback.repository": {
+          "type": "string",
+          "default": "",
+          "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$",
+          "patternErrorMessage": "Use the GitHub owner/repo format, for example: acme/widgets",
+          "markdownDescription": "Default GitHub repository for feedback issues (owner/repo). Required when feedback is enabled."
+        },
+        "beady.feedback.labels": {
+          "type": "object",
+          "default": {
+            "bug": "bug",
+            "feature": "enhancement",
+            "question": "question",
+            "other": "feedback"
+          },
+          "properties": {
+            "bug": {
+              "type": "string",
+              "markdownDescription": "Label applied to bug reports"
+            },
+            "feature": {
+              "type": "string",
+              "markdownDescription": "Label applied to feature requests"
+            },
+            "question": {
+              "type": "string",
+              "markdownDescription": "Label applied to questions or requests for clarification"
+            },
+            "other": {
+              "type": "string",
+              "markdownDescription": "Fallback label when the feedback type is not specified"
+            }
+          },
+          "additionalProperties": {
+            "type": "string",
+            "markdownDescription": "Extra feedback type -> label mappings (string)."
+          },
+          "markdownDescription": "Map feedback types to GitHub labels. Leave a value empty to skip labeling for that type."
+        },
+        "beady.feedback.useGitHubCli": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "Use the GitHub CLI (gh) for feedback submission when available. Falls back to API when disabled."
+        },
+        "beady.feedback.includeAnonymizedLogs": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Allow attaching anonymized logs/metadata when sending feedback. Users are prompted before logs are included."
+        },
+        "beady.activityFeed.enabled": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Enable the activity feed. When disabled, the feed view shows a disabled status."
+        },
+        "beady.activityFeed.allowRemote": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "Allow activity feed queries on remote workspaces. Disabled by default to avoid sqlite incompatibilities."
+        },
+        "beady.activityFeed.queryTimeoutMs": {
+          "type": "number",
+          "default": 5000,
+          "minimum": 500,
+          "maximum": 30000,
+          "description": "Timeout in milliseconds for sqlite activity feed queries (default 5000)."
+        },
+        "beady.enableDependencyEditing": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "Enable experimental dependency editing UI (add/remove). Requires bd CLI support; shows warning when CLI version is too old."
+        },
+        "beady.bulkActions.enabled": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "Enable experimental bulk status/label actions in the tree and activity feed. When disabled, bulk commands and menus are hidden."
+        },
+        "beady.bulkActions.maxSelection": {
+          "type": "integer",
+          "default": 50,
+          "minimum": 1,
+          "maximum": 200,
+          "markdownDescription": "Maximum number of items allowed in a bulk action selection. Values outside 1-200 are ignored and the default is used."
+        },
+        "beady.favorites.enabled": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "Enable experimental favorites toggling. When disabled, favorite commands and menus are hidden."
+        },
+        "beady.favorites.useLabelStorage": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Store favorites using bd labels. When disabled, favorites are stored locally in workspaceState only."
+        },
+        "beady.favorites.label": {
+          "type": "string",
+          "default": "favorite",
+          "markdownDescription": "Label name used when storing favorites via the bd CLI."
+        },
+        "beady.cli.timeoutMs": {
+          "type": "number",
+          "default": 15000,
+          "minimum": 1000,
+          "description": "Maximum time in milliseconds to wait for bd CLI commands before aborting (default: 15000)."
+        },
+        "beady.cli.retryCount": {
+          "type": "number",
+          "default": 1,
+          "minimum": 0,
+          "maximum": 5,
+          "description": "How many times to retry a bd CLI command after a timeout (default: 1). Set to 0 to disable retries."
+        },
+        "beady.cli.retryBackoffMs": {
+          "type": "number",
+          "default": 500,
+          "minimum": 0,
+          "maximum": 30000,
+          "description": "Delay in milliseconds before each bd CLI retry attempt (default: 500)."
+        },
+        "beady.offlineDetection.thresholdMs": {
+          "type": "number",
+          "default": 30000,
+          "minimum": 5000,
+          "maximum": 300000,
+          "description": "Total elapsed time in milliseconds across retries before treating the bd CLI as offline (default: 30000)."
+        },
+        "beady.quickFilters.enabled": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "Enable quick filter presets in the Beads explorer toolbar and command palette."
+        },
+        "beady.sortPicker.enabled": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Enable the explicit sort picker and assignee grouping. When disabled, sorting cycles through ID/Status/Epic only."
+        }
+      }
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "beady.applyQuickFilterPreset",
+          "when": "view == beady.issuesView && beady.quickFiltersEnabled",
+          "group": "navigation@1.5"
+        },
+        {
+          "command": "beady.clearQuickFilters",
+          "when": "view == beady.issuesView && beady.quickFiltersEnabled && beady.activeQuickFilter != ''",
+          "group": "navigation@1.6"
+        },
+        {
+          "command": "beady.pickSortMode",
+          "when": "view == beady.issuesView && beady.sortPickerEnabled",
+          "group": "navigation@1"
+        },
+        {
+          "command": "beady.toggleSortMode",
+          "when": "view == beady.issuesView && !beady.sortPickerEnabled",
+          "group": "navigation@1"
+        },
+        {
+          "command": "beady.toggleClosedVisibility",
+          "when": "view == beady.issuesView",
+          "group": "navigation@1.4",
+          "toggled": "beady.closedHidden"
+        },
+        {
+          "command": "beady.search",
+          "when": "view == beady.issuesView",
+          "group": "navigation@2"
+        },
+        {
+          "command": "beady.clearSearch",
+          "when": "view == beady.issuesView",
+          "group": "navigation@3"
+        },
+        {
+          "command": "beady.refresh",
+          "when": "view == beady.issuesView",
+          "group": "navigation@4"
+        },
+        {
+          "command": "beady.createBead",
+          "when": "view == beady.issuesView",
+          "group": "navigation@5"
+        },
+        {
+          "command": "beady.visualizeDependencies",
+          "when": "view == beady.issuesView",
+          "group": "navigation@6"
+        },
+        {
+          "command": "beady.clearSortOrder",
+          "when": "view == beady.issuesView",
+          "group": "1_sort@1"
+        },
+        {
+          "command": "beady.filterActivityFeed",
+          "when": "view == activityFeed",
+          "group": "navigation@1"
+        },
+        {
+          "command": "beady.clearActivityFeedFilter",
+          "when": "view == activityFeed",
+          "group": "navigation@2"
+        },
+        {
+          "command": "beady.refreshActivityFeed",
+          "when": "view == activityFeed",
+          "group": "navigation@3"
+        },
+        {
+          "command": "beady.openActivityFeedPanel",
+          "when": "view == activityFeed",
+          "group": "navigation@4"
+        },
+        {
+          "command": "beady.dependencyTree.pickRoot",
+          "when": "view == beadyDependencyTree",
+          "group": "navigation@1"
+        },
+        {
+          "command": "beady.dependencyTree.addUpstream",
+          "when": "view == beadyDependencyTree && config.beady.enableDependencyEditing",
+          "group": "navigation@2"
+        },
+        {
+          "command": "beady.dependencyTree.addDownstream",
+          "when": "view == beadyDependencyTree && config.beady.enableDependencyEditing",
+          "group": "navigation@3"
+        }
+      ],
+      "webview/context": [
+        {
+          "command": "beady.openBead",
+          "when": "webviewId == beady.issuesView && webviewSection == bead",
+          "group": "navigation@1"
+        },
+        {
+          "command": "beady.inlineStatusChange",
+          "when": "webviewId == beady.issuesView && webviewSection == bead",
+          "group": "modification@1"
+        },
+        {
+          "command": "beady.editAssignee",
+          "when": "webviewId == beady.issuesView && webviewSection == bead",
+          "group": "modification@2"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "beady.dependencyTree.addUpstream",
+          "when": "view == beadyDependencyTree && viewItem == dependencyGroupUpstream && config.beady.enableDependencyEditing",
+          "group": "navigation@1"
+        },
+        {
+          "command": "beady.dependencyTree.addDownstream",
+          "when": "view == beadyDependencyTree && viewItem == dependencyGroupDownstream && config.beady.enableDependencyEditing",
+          "group": "navigation@1"
+        },
+        {
+          "command": "beady.dependencyTree.remove",
+          "when": "view == beadyDependencyTree && (viewItem == dependencyNodeUpstream || viewItem == dependencyNodeDownstream) && config.beady.enableDependencyEditing",
+          "group": "inline@2"
+        },
+        {
+          "command": "beady.inlineStatusChange",
+          "when": "view == activityFeed && viewItem == activityEvent && config.beady.inlineStatusChange.enabled",
+          "group": "navigation@1"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "beady.bulkUpdateStatus",
+          "when": "beady.bulkActionsEnabled && beady.bulkActionsHasSelection"
+        },
+        {
+          "command": "beady.bulkAddLabel",
+          "when": "beady.bulkActionsEnabled"
+        },
+        {
+          "command": "beady.bulkRemoveLabel",
+          "when": "beady.bulkActionsEnabled"
+        },
+        {
+          "command": "beady.toggleFavorite",
+          "when": "beady.favoritesEnabled"
+        },
+        {
+          "command": "beady.applyQuickFilterPreset",
+          "when": "beady.quickFiltersEnabled"
+        },
+        {
+          "command": "beady.clearQuickFilters",
+          "when": "beady.quickFiltersEnabled && beady.activeQuickFilter != ''"
+        },
+        {
+          "command": "beady.openInProgressPanel"
+        },
+        {
+          "command": "beady.inlineEditTitle",
+          "when": "config.beady.inlineStatusChange.enabled"
+        },
+        {
+          "command": "beady.inlineEditLabels",
+          "when": "config.beady.inlineStatusChange.enabled"
+        },
+        {
+          "command": "beady.editAssignee"
+        },
+        {
+          "command": "beady.inlineStatusChange",
+          "when": "config.beady.inlineStatusChange.enabled"
+        },
+        {
+          "command": "beady.pickSortMode",
+          "when": "beady.sortPickerEnabled"
+        },
+        {
+          "command": "beady.toggleSortMode",
+          "when": "!beady.sortPickerEnabled"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "beady.activityFeed.openSelected",
+        "key": "space",
+        "when": "focusedView == activityFeed && listHasSelectionOrFocus && !inputFocus"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "node -e \"if (process.env.SKIP_VSCODE_PREPUBLISH==='1'){process.exit(0)}\" || (npm run typecheck && npm run bundle && npm run audit:bundle && npm run lint:webview && npm run lint:manifest && npm run check:size && npm run check:perf && npm run check:manifest)",
+    "typecheck": "tsc --noEmit",
+    "compile": "tsc -b packages/platform-vscode/tsconfig.json",
+    "viz:webviews": "npm run compile && node scripts/visual/webviews.js",
+    "ci:visual:webviews": "npm run compile && node scripts/visual/webviews.js --out tmp/webview-visual",
+    "bundle:types": "npm run build:core && tsc -p packages/platform-vscode/tsconfig.json --emitDeclarationOnly --outDir dist",
+    "bundle": "npm run bundle:types && tsx scripts/esbuild.extension.ts",
+    "audit:bundle": "npm run bundle && node scripts/audit-bundle.js",
+    "bundle:watch": "npm run bundle -- --watch",
+    "watch": "node scripts/watch.js",
+    "build:core": "npm run -w @beads/core build",
+    "build:vscode": "npm run -w @beads/platform-vscode build",
+    "lint": "eslint . --ext ts,json,jsonc",
+    "lint:strict-bool": "eslint src packages/core/src --ext ts --config .eslintrc.strict-bool.json",
+    "lint:webview": "tsx scripts/check-webview-csp.ts",
+    "lint:manifest": "tsx scripts/check-manifest-icons.ts",
+    "test": "npm run test:unit",
+    "test:unit": "npm run compile && npm run test:unit:run",
+    "test:unit:run": "mocha ./out/test/unit/**/*.test.js ./out/test/deps.add.test.js ./out/test/sanitization.test.js ./out/test/littleGlen.command-validation.test.js ./out/test/log-redaction.test.js ./out/test/activityFeed.timestamps.test.js ./out/test/title-format.test.js ./out/test/activityFeed.title-format.test.js ./out/test/multi-root.cli.test.js ./out/test/tooltips.security.test.js ./out/test/export.markdown.test.js ./out/test/export.csv.test.js ./out/test/bulk.status.test.js ./out/test/bulk.results.test.js ./out/test/bulk.labels.test.js ./out/test/favorites.persistence.test.js ./out/test/favorites.validation.test.js ./out/test/favorites.toggle.test.js ./out/test/inline.status.test.js ./out/test/inline.validation.test.js --exit",
+    "test:bd-cli": "npm run compile && mocha ./out/test/bd-cli.test.js",
+    "test:integration": "npm run compile && npm run bundle && node ./out/test/runTest.js",
+    "test:ui": "npm run compile && extest setup-and-run out/test/ui/*.test.js",
+    "test:stress": "./scripts/stress-test.sh",
+    "test:all": "npm run lint && npm run test:unit && npm run test:core && npm run test:bd-cli",
+    "guard": "./scripts/worktree-guard.sh",
+    "bd": "./scripts/bd-wrapper.sh",
+    "package": "vsce package --follow-symlinks",
+    "publish": "vsce publish --follow-symlinks",
+    "install-local": "npm run package && ./scripts/install-local.sh",
+    "test:harness": "bash ./scripts/agent-harness/run-placeholder.sh",
+    "check:size": "node scripts/check-vsix-size.js",
+    "test:integration:stable": "node -e \"const {spawnSync}=require('child_process'); const env={...process.env, VSCODE_TEST_CHANNEL:'stable', VSCODE_TEST_INSTANCE_ID:process.env.VSCODE_TEST_INSTANCE_ID||require('crypto').randomUUID()}; const cmd=process.platform==='win32'?'npm.cmd':'npm'; const r=spawnSync(cmd,['run','test:integration'],{stdio:'inherit',env}); process.exit(r.status ?? 1);\"",
+    "test:integration:insiders": "node -e \"const {spawnSync}=require('child_process'); const env={...process.env, VSCODE_TEST_CHANNEL:'insiders', VSCODE_TEST_INSTANCE_ID:process.env.VSCODE_TEST_INSTANCE_ID||require('crypto').randomUUID()}; const cmd=process.platform==='win32'?'npm.cmd':'npm'; const r=spawnSync(cmd,['run','test:integration'],{stdio:'inherit',env}); process.exit(r.status ?? 1);\"",
+    "test:integration:headless": "node -e \"const {spawnSync}=require('child_process'); const env={...process.env, VSCODE_TEST_CHANNEL:process.env.VSCODE_TEST_CHANNEL||'stable', VSCODE_TEST_INSTANCE_ID:process.env.VSCODE_TEST_INSTANCE_ID||require('crypto').randomUUID()}; const isLinux=process.platform==='linux'; const cmd=isLinux?'xvfb-run':(process.platform==='win32'?'npm.cmd':'npm'); const args=isLinux?['-a','npm','run','test:integration']:['run','test:integration']; const r=spawnSync(cmd,args,{stdio:'inherit',env}); process.exit(r.status ?? 1);\"",
+    "test:clean-temp": "bash ./scripts/cleanup-temp-tests.sh",
+    "ci:lint": "npm run lint && node scripts/l10n-check.js && npm run lint:webview && npm run lint:manifest",
+    "ci:unit": "npm run test:unit && npm run test:core",
+    "ci:integration": "npm run test:integration:headless",
+    "ci:core": "npm run --if-present build:core && npm run --if-present test:core",
+    "ci:workspace": "npm run ci:core",
+    "ci:verify": "npm run ci:lint && npm run compile && npm run test:unit && npm run test:integration:headless && npm run audit:bundle && npm run lint:webview && npm run lint:manifest && npm run check:size && npm run check:vsix-contents && npm run check:perf",
+    "ci:coverage": "npm run compile && c8 --reporter=text --reporter=lcov npm run test:unit:run",
+    "test:core": "npm run -w @beads/core test",
+    "recommend:add": "tsx scripts/add-vscode-recommendation.ts",
+    "test:bundle": "npm run compile && npm run bundle && node ./out/test/bundle.smoke.test.js",
+    "check:vsix-size": "node scripts/check-vsix-size.js",
+    "check:vsix-contents": "node scripts/check-vsix-contents.js",
+    "check:perf": "npm run bundle && tsx scripts/perf/measure-activation.ts",
+    "check:manifest": "npm run bundle && npx vsce package --no-dependencies --yarn --out tmp/manifest-check.vsix"
+  },
+  "devDependencies": {
+    "@beads/bd": "^0.29.0",
+    "@types/glob": "^8.1.0",
+    "@types/mocha": "^10.0.6",
+    "@types/node": "^18.19.0",
+    "@types/react": "^18.2.46",
+    "@types/react-dom": "^18.3.7",
+    "@types/sanitize-html": "^2.16.0",
+    "@types/vscode": "^1.85.0",
+    "@typescript-eslint/eslint-plugin": "^6.17.0",
+    "@typescript-eslint/parser": "^6.17.0",
+    "@vscode/test-electron": "^2.3.8",
+    "@vscode/vsce": "^3.6.2",
+    "c8": "^10.1.3",
+    "esbuild": "^0.23.0",
+    "eslint": "^8.56.0",
+    "eslint-plugin-jsonc": "^2.15.1",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-no-unsanitized": "^4.0.2",
+    "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-sonarjs": "^1.0.4",
+    "glob": "^10.3.10",
+    "ink": "^4.4.1",
+    "ink-testing-library": "^4.0.0",
+    "mocha": "^10.2.0",
+    "playwright": "^1.42.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.3.1",
+    "ts-node": "^10.9.2",
+    "tsc-alias": "^1.8.10",
+    "tsx": "^4.7.0",
+    "jsonc-eslint-parser": "^2.4.0",
+    "typescript": "^5.3.3",
+    "vscode-extension-tester": "^8.19.0"
+  },
+  "dependencies": {
+    "@octokit/rest": "^22.0.1",
+    "sanitize-html": "^2.17.0",
+    "zod": "^3.23.8"
+  }
+}

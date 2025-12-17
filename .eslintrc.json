@@ -1,0 +1,60 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2020,
+    "sourceType": "module"
+  },
+  "env": {
+    "node": true,
+    "es2020": true
+  },
+  "plugins": ["@typescript-eslint", "no-unsanitized", "sonarjs", "promise", "import", "jsonc"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "rules": {
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    "no-unsanitized/method": "warn",
+    "no-unsanitized/property": "warn",
+    "promise/no-return-wrap": "warn",
+    "promise/valid-params": "warn",
+    "import/no-cycle": "off",
+    "sonarjs/no-duplicate-string": "off",
+    "@typescript-eslint/strict-boolean-expressions": "off"
+  },
+  "overrides": [
+    {
+      "files": [
+        "package.json",
+        "package.nls.json",
+        "tsconfig.json",
+        "tsconfig.*.json",
+        "packages/**/tsconfig.json",
+        "packages/**/tsconfig.*.json"
+      ],
+      "parser": "jsonc-eslint-parser",
+      "extends": ["plugin:jsonc/recommended-with-jsonc"],
+      "rules": {
+        "jsonc/array-bracket-newline": "off",
+        "jsonc/object-curly-newline": "off",
+        "jsonc/sort-keys": "off",
+        "@typescript-eslint/strict-boolean-expressions": "off"
+      }
+    },
+    {
+      "files": [
+        "src/extension.main.ts",
+        "src/providers/**/*",
+        "src/views/**/*",
+        "src/test/**/*",
+        "scripts/**/*"
+      ],
+      "rules": {
+        "@typescript-eslint/no-unused-vars": "off"
+      }
+    }
+  ]
+}

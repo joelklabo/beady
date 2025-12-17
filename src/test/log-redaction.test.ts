@@ -1,0 +1,121 @@
+import * as assert from 'assert';
+import * as fs from 'fs/promises';
+import * as os from 'os';
+import * as path from 'path';
+import Module = require('module');
+import {
+  DEFAULT_LOG_BYTES_LIMIT,
+  limitLogPayload,
+  redactLogContent
+} from '../utils/fs';
+
+const moduleAny = Module as any;
+const originalLoad = moduleAny._load;
+const vscodeStub = {
+  l10n: { t: (message: string, ...args: any[]) => message.replace(/\{(\d+)\}/g, (_m, i) => String(args[Number(i)] ?? `{${i}}`)) },
+  env: { language: 'en' },
+  extensions: { getExtension: () => undefined },
+};
+
+moduleAny._load = (request: string, parent: any, isMain: boolean) => {
+  if (request === 'vscode') {
+    return vscodeStub;
+  }
+  return originalLoad(request, parent, isMain);
+};
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { buildFeedbackBody } = require('../feedback');
+
+describe('Log redaction & capture', () => {
+  after(() => {
+    moduleAny._load = originalLoad;
+  });
+
+  it('redacts tokens, emails, and absolute paths', () => {
+    const raw = [
+      'token ghp_abcdefghijklmnopqrstuvwxyz1234567890',
+      'contact: admin@example.com',
+      'Bearer abcdefghijklmnopqrstuvwxyz',
+      'Path: /Users/alice/projects/beads/.env',
+      'Win: C\\\\Users\\\\Alice\\\\secrets.txt'
+    ].join('\n');
+
+    const redacted = redactLogContent(raw, { workspacePaths: ['/Users/alice/projects/beads'] });
+
+    assert.ok(!/ghp_[A-Za-z0-9]{30,}/.test(redacted), 'GitHub token should be redacted');
+    assert.ok(!redacted.includes('admin@example.com'), 'Email should be redacted');
+    assert.ok(!/Bearer\s+abcdefghijklmnopqrstuvwxyz/.test(redacted), 'Bearer token should be redacted');
+    assert.ok(!redacted.includes('/Users/alice/projects/beads'), 'Workspace path should be redacted');
+    assert.ok(!redacted.includes('C\\Users\\Alice'), 'Windows path should be redacted');
+    assert.ok(redacted.includes('<email>'), 'Redacted marker should be present');
+  });
+
+  it('redacts worktree identifiers and collapses worktree paths', () => {
+    const raw = [
+      'error in wt:dev-main',
+      'Path: /Users/alice/worktrees/dev-main/.beads/issues.db',
+      'token ghp_abcdefghijklmnopqrstuv1234567890'
+    ].join('\n');
+
+    const redacted = redactLogContent(raw, { workspacePaths: ['/Users/alice/worktrees/dev-main'], worktreeId: 'wt:dev-main' });
+
+    assert.ok(!redacted.includes('dev-main/.beads'), 'workspace path should be redacted');
+    assert.ok(!redacted.includes('wt:dev-main'), 'worktree id should be redacted');
+    assert.ok(redacted.includes('<worktree>'), 'worktree placeholder should be present');
+    assert.ok(!/ghp_[A-Za-z0-9]{20,}/.test(redacted), 'token marker should be redacted');
+  });
+
+
+
+  it('caps log payload size safely', () => {
+    const oversized = 'x'.repeat(DEFAULT_LOG_BYTES_LIMIT + 2048);
+    const limited = limitLogPayload(oversized);
+
+    assert.ok(limited.truncated, 'Payload should be truncated');
+    assert.ok(limited.bytes <= DEFAULT_LOG_BYTES_LIMIT, 'Truncated payload must respect byte limit');
+    assert.ok(limited.log.startsWith('[[truncated]]'));
+  });
+
+  it('skips logs by default when user has not opted in', async () => {
+    const tmpFile = path.join(os.tmpdir(), `beads-log-${Date.now()}.log`);
+    await fs.writeFile(tmpFile, 'sensitive data should stay local', 'utf8');
+
+    try {
+      const body = await buildFeedbackBody({ baseBody: 'Feedback body', logPath: tmpFile });
+
+      assert.ok(body.includes('opt-out'), 'Body should mention opt-out');
+      assert.ok(!body.includes('Sanitized logs'), 'Logs should not be attached');
+    } finally {
+      await fs.rm(tmpFile, { force: true });
+    }
+  });
+
+  it('attaches sanitized tail when opted in', async () => {
+    const tmpFile = path.join(os.tmpdir(), `beads-log-${Date.now()}-optin.log`);
+    const lines = [
+      'debug: start',
+      'info: user john@example.com',
+      'token ghp_abcdEFGHijklMNOPqrstUVWXyz1234567890',
+      'path /Users/john/private/secret.txt',
+      'debug: done'
+    ];
+    await fs.writeFile(tmpFile, lines.join('\n'), 'utf8');
+
+    try {
+      const body = await buildFeedbackBody({
+        baseBody: 'Steps to reproduce',
+        includeLogs: true,
+        logPath: tmpFile,
+        workspacePaths: ['/Users/john']
+      });
+
+      assert.ok(body.includes('Sanitized logs'), 'Logs section should be present');
+      assert.ok(!body.includes('john@example.com'), 'Email should be redacted in attached logs');
+      assert.ok(!body.includes('ghp_abcd'), 'Token should be redacted in attached logs');
+      assert.ok(body.includes('<path>') || body.includes('<workspace>'), 'Paths should be redacted');
+    } finally {
+      await fs.rm(tmpFile, { force: true });
+    }
+  });
+});

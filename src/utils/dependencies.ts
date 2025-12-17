@@ -1,0 +1,16 @@
+export {
+  BEAD_ID_PATTERN,
+  DependencyDirection,
+  DependencyLink,
+  DependencyType,
+  DependencyValidationReason,
+  DependencyValidationResult,
+  extractDependencyIds,
+  extractDependencyLinks,
+  hasDependency,
+  hasDependencyPath,
+  normalizeDependencyType,
+  sanitizeDependencyId,
+  validateDependencyAdd,
+  validateDependencyAddWithReason,
+} from '@beads/core';

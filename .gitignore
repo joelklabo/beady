@@ -1,0 +1,26 @@
+node_modules
+out
+dist
+.vscode-test
+coverage/
+.nyc_output
+coverage-final.json
+.coverage*
+*.vsix
+.beads
+.beads/
+# Explicitly ignore claim lock created at runtime
+.beads/claim.lock
+.beads/merge.lock
+.beads/*.lock
+.beads/heartbeats/
+.npm-cache-*/
+DISTRIBUTION.md
+.gitattributes
+
+# Local temporary files (DO NOT use /tmp/ - use this local tmp/ instead)
+tmp/
+
+# Git worktrees for multi-agent workflow (stored outside repo)
+# Note: worktrees are at ../worktrees/, not in repo, but just in case
+worktrees/
