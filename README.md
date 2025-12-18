@@ -22,7 +22,7 @@
 
 ## Screenshot
 
-![Beady issues view showing tasks with status badges and dependency indicators](https://raw.githubusercontent.com/joelklabo/beady/main/media/screenshot.png)
+![Beady issues view showing tasks with status badges and dependency indicators](https://raw.githubusercontent.com/joelklabo/beady/b2320f38059e1e62225cdd041944bfa64398b381/media/screenshot.png)
 
 ## Features
 
