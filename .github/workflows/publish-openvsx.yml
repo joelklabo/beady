@@ -37,6 +37,12 @@ jobs:
       - name: Release gates (tests + audits + package checks)
         run: npm run ci:verify
 
+      - name: Install Playwright (Chromium)
+        run: npx playwright install --with-deps chromium
+
+      - name: Refresh README screenshot (bundled into VSIX)
+        run: node scripts/visual/readme-screenshot.js
+
       - name: Package VSIX (artifact)
         run: npm run package
 

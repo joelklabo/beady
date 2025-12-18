@@ -1,0 +1,84 @@
+name: Release
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "New extension version (semver, no leading 'v'). Example: 0.1.1 or 0.2.0-rc.1"
+        required: true
+        type: string
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      BEADS_NO_DAEMON: "1"
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Validate version input
+        run: |
+          node -e "const v=process.env.RELEASE_VERSION||''; if(v.startsWith('v')){throw new Error(`Version must not start with 'v': ${v}`)}; if(!/^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$/.test(v)){throw new Error(`Invalid semver: ${v}`)}"
+        env:
+          RELEASE_VERSION: ${{ inputs.version }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Bump package.json version (no tag)
+        run: npm version "${RELEASE_VERSION}" --no-git-tag-version
+        env:
+          RELEASE_VERSION: ${{ inputs.version }}
+
+      - name: Release gates (tests + audits + package checks)
+        run: npm run ci:verify
+
+      - name: Install Playwright (Chromium)
+        run: npx playwright install --with-deps chromium
+
+      - name: Refresh README screenshot
+        run: node scripts/visual/readme-screenshot.js
+
+      - name: Commit release changes
+        run: |
+          set -euo pipefail
+          git status --porcelain=v1
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package.json package-lock.json media/screenshot.png
+          git commit -m "Release v${RELEASE_VERSION}"
+        env:
+          RELEASE_VERSION: ${{ inputs.version }}
+
+      - name: Create tag
+        run: |
+          set -euo pipefail
+          git tag "v${RELEASE_VERSION}"
+        env:
+          RELEASE_VERSION: ${{ inputs.version }}
+
+      - name: Push commit + tag
+        run: |
+          set -euo pipefail
+          git push origin HEAD:main
+          git push origin "v${RELEASE_VERSION}"
+        env:
+          RELEASE_VERSION: ${{ inputs.version }}
+
