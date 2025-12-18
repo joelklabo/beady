@@ -59,6 +59,16 @@ Please be respectful and constructive in all interactions with the project. We a
    git commit -m "Add feature: description of what you added"
    ```
 
+### Updating the README screenshot
+
+If you change UI that affects the README/Marketplace screenshot, regenerate it and commit the updated PNG:
+
+```bash
+npm run viz:readme-screenshot
+git add media/screenshot.png
+git commit -m "Update README screenshot"
+```
+
 ### Code Style
 
 - Follow existing code patterns and conventions
