@@ -673,6 +673,7 @@
     "compile": "tsc -b packages/platform-vscode/tsconfig.json",
     "viz:webviews": "npm run compile && node scripts/visual/webviews.js",
     "ci:visual:webviews": "npm run compile && node scripts/visual/webviews.js --out tmp/webview-visual",
+    "viz:readme-screenshot": "npm run compile && npm run bundle && node scripts/visual/readme-screenshot.js",
     "bundle:types": "npm run build:core && tsc -p packages/platform-vscode/tsconfig.json --emitDeclarationOnly --outDir dist",
     "bundle": "npm run bundle:types && tsx scripts/esbuild.extension.ts",
     "audit:bundle": "npm run bundle && node scripts/audit-bundle.js",
